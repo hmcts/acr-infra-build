@@ -1,0 +1,14 @@
+# Docs:
+# https://aka.ms/yaml
+
+trigger:
+  - master
+pool:
+  name: Hosted Ubuntu 1604
+steps:
+- task: Bash@3
+  displayName: "Set build number"
+  inputs:
+    targetType: inline
+    script: 'echo hello world'
+
