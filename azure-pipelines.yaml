@@ -16,4 +16,4 @@ steps:
     deploymentMode: 'Incremental'
     templateLocation: 'Linked artifact'
     csmFile: 'template.json'
-    overrideParameters: '-name=hmctssandbox'
+    overrideParameters: '-name hmctssandbox'
