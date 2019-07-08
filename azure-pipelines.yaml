@@ -13,6 +13,7 @@ steps:
     action: 'Create Or Update Resource Group'
     resourceGroupName: 'cnp-acr-rg'
     location: 'UK South'
-    csmFileLink: 'template.json'
-    overrideParameters: --name=hmctssandbox
     deploymentMode: 'Incremental'
+    templateLocation: 'Linked artifact'
+    csmFile: 'template.json'
+    overrideParameters: '-name=hmctssandbox'
