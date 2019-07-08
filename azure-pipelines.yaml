@@ -6,9 +6,14 @@ trigger:
 pool:
   name: Hosted Ubuntu 1604
 steps:
-- task: Bash@3
-  displayName: "Set build number"
+- task: AzureResourceGroupDeployment@2
+  displayName: "Deploy hmctssandbox"
   inputs:
-    targetType: inline
-    script: 'echo hello world'
-
+    azureSubscription: 'azurerm-sandbox'
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: 'cnp-acr-rg'
+    location: 'UK South'
+    csmFileLink: 'template.json'
+    overrideParameters: <
+      --name=hmctssandbox
+    deploymentMode: 'Incremental'
