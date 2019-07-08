@@ -1,0 +1,33 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "name": {
+            "type": "String"
+        },
+        "sku_name": {
+            "type": "String",
+            "defaultValue": "Premium"
+        },
+        "sku_tier": {
+            "type": "String",
+            "defaultValue": "Premium"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.ContainerRegistry/registries",
+            "apiVersion": "2017-10-01",
+            "name": "[parameters('name')]",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "[parameters('sku_name')]",
+                "tier": "[parameters('sku_tier')]",
+            },
+            "properties": {
+                "adminUserEnabled": true
+            }
+        }
+    ]
+}
