@@ -7,37 +7,40 @@ pool:
   name: Hosted Ubuntu 1604
 
 stages:
-- stage: CI
-  jobs:
-  - job: Validate
-    - task: PublishPipelineArtifact@0
-      inputs:
-        artifactName: 'drop'
-        targetPath: '$(System.DefaultWorkingDirectory)/template.json'
-- stage: Sandbox  
-  jobs:
-  - deployment: Deploy
-    pool:
-      vmImage: 'Ubuntu-16.04'
-    environment: 'sandbox'
-    strategy:
-      # default deployment strategy
-      runOnce:
-        deploy:
-          steps:
-            - task: DownloadPipelineArtifact@1
-              inputs:
-                buildType: 'current'
-                artifactName: 'drop'
-                targetPath: '$(System.DefaultWorkingDirectory)'
-            - task: AzureResourceGroupDeployment@2
-              displayName: "Deploy hmctssandbox"
-              inputs:
-                azureSubscription: 'azurerm-sandbox'
-                action: 'Create Or Update Resource Group'
-                resourceGroupName: 'cnp-acr-rg'
-                location: 'UK South'
-                deploymentMode: 'Incremental'
-                templateLocation: 'Linked artifact'
-                csmFile: 'template.json'
-                overrideParameters: '-name hmctssandbox'
+  - stage: CI
+    jobs:
+      - job: Validate
+        pool:
+          vmImage: 'Ubuntu-16.04'
+        steps:
+          - task: PublishPipelineArtifact@0
+            inputs:
+              artifactName: 'drop'
+              targetPath: '$(System.DefaultWorkingDirectory)/template.json'
+  - stage: Sandbox
+    jobs:
+      - deployment: Deploy
+        pool:
+          vmImage: 'Ubuntu-16.04'
+        environment: 'sandbox'
+        strategy:
+          # default deployment strategy
+          runOnce:
+            deploy:
+              steps:
+                - task: DownloadPipelineArtifact@1
+                  inputs:
+                    buildType: 'current'
+                    artifactName: 'drop'
+                    targetPath: '$(System.DefaultWorkingDirectory)'
+                - task: AzureResourceGroupDeployment@2
+                  displayName: "Deploy hmctssandbox"
+                  inputs:
+                    azureSubscription: 'azurerm-sandbox'
+                    action: 'Create Or Update Resource Group'
+                    resourceGroupName: 'cnp-acr-rg'
+                    location: 'UK South'
+                    deploymentMode: 'Incremental'
+                    templateLocation: 'Linked artifact'
+                    csmFile: 'template.json'
+                    overrideParameters: '-name hmctssandbox'
