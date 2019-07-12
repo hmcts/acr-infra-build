@@ -42,3 +42,80 @@ stages:
                     templateLocation: 'Linked artifact'
                     csmFile: 'template.json'
                     overrideParameters: '-name hmctssandbox'
+      - deployment: hmctstest
+        pool:
+          vmImage: 'Ubuntu-16.04'
+        environment: 'sandbox'
+        strategy:
+          # default deployment strategy
+          runOnce:
+            deploy:
+              steps:
+                - task: DownloadPipelineArtifact@1
+                  inputs:
+                    buildType: 'current'
+                    artifactName: 'drop'
+                    targetPath: '$(System.DefaultWorkingDirectory)'
+                - task: AzureResourceGroupDeployment@2
+                  displayName: "Deploy hmctssandbox"
+                  inputs:
+                    azureSubscription: 'azurerm-sandbox'
+                    action: 'Create Or Update Resource Group'
+                    resourceGroupName: 'cnp-acr-rg'
+                    location: 'UK South'
+                    deploymentMode: 'Incremental'
+                    templateLocation: 'Linked artifact'
+                    csmFile: 'template.json'
+                    overrideParameters: '-name hmctstest'
+  - stage: Prod
+    jobs:
+      - deployment: hmctspublic
+        pool:
+          vmImage: 'Ubuntu-16.04'
+        environment: 'prod'
+        strategy:
+          # default deployment strategy
+          runOnce:
+            deploy:
+              steps:
+                - task: DownloadPipelineArtifact@1
+                  inputs:
+                    buildType: 'current'
+                    artifactName: 'drop'
+                    targetPath: '$(System.DefaultWorkingDirectory)'
+                - task: AzureResourceGroupDeployment@2
+                  displayName: "Deploy hmctspublic"
+                  inputs:
+                    azureSubscription: 'azurerm-prod'
+                    action: 'Create Or Update Resource Group'
+                    resourceGroupName: 'rpe-acr-prod-rg'
+                    location: 'UK South'
+                    deploymentMode: 'Incremental'
+                    templateLocation: 'Linked artifact'
+                    csmFile: 'template.json'
+                    overrideParameters: '-name hmctspublic'
+      - deployment: hmctsprivate
+        pool:
+          vmImage: 'Ubuntu-16.04'
+        environment: 'prod'
+        strategy:
+          # default deployment strategy
+          runOnce:
+            deploy:
+              steps:
+                - task: DownloadPipelineArtifact@1
+                  inputs:
+                    buildType: 'current'
+                    artifactName: 'drop'
+                    targetPath: '$(System.DefaultWorkingDirectory)'
+                - task: AzureResourceGroupDeployment@2
+                  displayName: "Deploy hmctsprivate"
+                  inputs:
+                    azureSubscription: 'azurerm-prod'
+                    action: 'Create Or Update Resource Group'
+                    resourceGroupName: 'rpe-acr-prod-rg'
+                    location: 'UK South'
+                    deploymentMode: 'Incremental'
+                    templateLocation: 'Linked artifact'
+                    csmFile: 'template.json'
+                    overrideParameters: '-name hmctsprivate'
